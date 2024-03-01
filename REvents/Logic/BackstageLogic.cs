@@ -33,10 +33,13 @@ namespace REvents.Logic
         {
             try
             {
+                var (title, details) = e.GetTitles();
+
                 return new EventDescription
                 {
                     Id = e.id,
-                    Name = e.name,
+                    Title = title,
+                    Details = details,
                     Types = e.GetTypes(),
                     Date = e.GetDate(),
                     url = e.url,

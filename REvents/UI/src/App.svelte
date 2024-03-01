@@ -10,10 +10,10 @@
 
 
 <Router {url}>
-    <div class="container">
-        <h1 class="text-primary"><Link class="text-primary" to="/">Мюнхен Афиша</Link></h1>
-    </div>
-    <hr />
+    <header class="container">
+        <Link class="text-primary" to="/"><h1 class="text-primary">Мюнхен Афиша</h1></Link>
+    </header>
+    <div class="border-bottom mb-5"></div>
     <!--  <nav>
         <Link to="/">Home</Link>
         <Link to="/backstage">backstage</Link>

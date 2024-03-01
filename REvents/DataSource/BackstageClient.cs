@@ -312,7 +312,7 @@ namespace REvents.DataSource
         pkstatus = "62"
          }, new BackstageEvent {
                 id = "65ca06b3a6a1a",
-        name = "SUBSIGNAL + POWERIZED |\u00a0Nachholtermin vom 12.10.23",
+        name = "SUBSIGNAL + POWERIZED | Nachholtermin vom 12.10.23",
         description = "Progressive Rock",
         venue = "BACKSTAGE CLUB",
         date = "03/24/2024",
