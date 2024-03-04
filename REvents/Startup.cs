@@ -64,6 +64,22 @@ namespace REvents
                 app.UseCors(b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());                
             }
 
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path.HasValue
+                    && (context.Request.Path.Value.Contains("/api")
+                    || context.Request.Path.Value.Split("/").Last().Contains(".")))
+                {
+                    await next(context);
+                    return;
+                }
+                using var str =  File.OpenRead($"{Directory.GetCurrentDirectory()}/wwwroot/index.html");
+                await str.CopyToAsync(context.Response.Body);
+                context.Response.Body.Position = 0;
+                context.Response.ContentType = "text/html";
+                await context.Response.CompleteAsync();
+            });
+
             app.UseRouting();
 
             app.UseAuthorization();
