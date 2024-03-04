@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Projects\\Temp\\REvents\\REvents\\REvents.csproj": {}
+    "D:\\Projects\\Temp\\affische\\REvents\\REvents.csproj": {}
   },
   "projects": {
-    "D:\\Projects\\Temp\\REvents\\REvents\\REvents.csproj": {
+    "D:\\Projects\\Temp\\affische\\REvents\\REvents.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Projects\\Temp\\REvents\\REvents\\REvents.csproj",
+        "projectUniqueName": "D:\\Projects\\Temp\\affische\\REvents\\REvents.csproj",
         "projectName": "REvents",
-        "projectPath": "D:\\Projects\\Temp\\REvents\\REvents\\REvents.csproj",
+        "projectPath": "D:\\Projects\\Temp\\affische\\REvents\\REvents.csproj",
         "packagesPath": "C:\\Users\\as980206\\.nuget\\packages\\",
-        "outputPath": "D:\\Projects\\Temp\\REvents\\REvents\\obj\\",
+        "outputPath": "D:\\Projects\\Temp\\affische\\REvents\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
