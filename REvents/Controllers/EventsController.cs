@@ -21,7 +21,7 @@ namespace REvents.Controllers
         }
 
         [HttpGet("backstage")]
-        public async Task<ActionResult<IEnumerable<EventDescription>>> GetBackstageEvents()
+        public async Task<ActionResult<EventsResponse>> GetBackstageEvents()
         {
             return Ok(await backstageLogic.GetEvents());
         }

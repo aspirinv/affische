@@ -20,13 +20,26 @@ namespace REvents.Logic
             this.log = log;
         }
 
-        public async Task<ICollection<EventDescription>> GetEvents()
+        public async Task<EventsResponse> GetEvents()
         {
             log.LogInformation("Start collecting backstage events");
-            return (await client.GetEvents())
+            var events = (await client.GetEvents())
                 .Select(e => Convert(e))
                 .Where(e => e != null)
                 .ToList();
+            return new EventsResponse
+            {
+                Artists = events.Select(e => e.Title).Distinct().OrderBy(e => e).ToArray(),
+                Types = events.SelectMany(e => e.Types).Distinct().OrderBy(e => e).ToArray(),
+                Events = events
+                    .GroupBy(e => e.Date.Date)
+                    .OrderBy(g => g.Key)
+                    .Select(g => new EventsGroup
+                    {
+                        Date = g.Key,
+                        Events = g.OrderBy(x => x.Date).ToArray()
+                    }).ToArray()
+            };
         }
 
         private EventDescription Convert(BackstageEvent e)

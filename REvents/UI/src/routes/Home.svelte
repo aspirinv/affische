@@ -1,5 +1,5 @@
 ﻿<script lang="ts">
-    import logo from "../assets/aff_ico.jpg";
+    import logo from "../assets/aff_ico.png";
 </script>
 
 

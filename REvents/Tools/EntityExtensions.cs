@@ -26,8 +26,9 @@ namespace REvents.Tools
             => e.description?
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Append(e.type)
-                .ToArray();
+                .Select(x=>x.Trim())
+                //.Append(e.type)
+                .ToArray()??new string[0];
 
         public static DateTime GetDate(this BackstageEvent e)
             => DateTime.ParseExact($"{e.date} {e.time.IfEmpty("00:00")}", "MM/dd/yyyy HH:mm", null);
