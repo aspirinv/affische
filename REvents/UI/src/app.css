@@ -1,1 +1,6 @@
 @import url('bootstrap.min.css');
+
+.verticaltext {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
