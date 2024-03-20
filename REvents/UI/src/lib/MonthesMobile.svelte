@@ -14,16 +14,10 @@
         };
     });
     const pointerScroll = (main, highlight) => {
-        let isDrag = false;
+
         let pos = 0;
         highlight.scrollTop = 80;
-        const dragStart = () => isDrag = true;
-        const dragEnd = () => isDrag = false;
-        const drag = (ev) => {
-            if (!isDrag) return;
-            pos -= ev.movementY;
-            main.scrollTop = pos;
-            highlight.scrollTop = Math.max(80, pos + 80);
+        const scroll = (pos) => {
             const sPos = pos + monthHeight / 4;
             let currentMonth = Math.floor(sPos / monthHeight);
             if (currentMonth < 0) {
@@ -38,11 +32,16 @@
             let moveToDate = new Date(year, currentMonth, day);
             dispatch("movedto", { to: moveToDate });
         }
+        main.addEventListener("scroll", e => {
+            highlight.scrollTop = Math.max(monthHeight, main.scrollTop + monthHeight);
+            scroll(main.scrollTop);
+        })
 
-        main.addEventListener("pointerdown", dragStart);
-        highlight.addEventListener("pointerdown", dragStart);
-        addEventListener("pointerup", dragEnd);
-        addEventListener("pointermove", drag);
+        highlight.addEventListener("scroll", e => {
+            const top = Math.max(0, highlight.scrollTop - monthHeight);
+            main.scrollTop = top;
+            scroll(top);
+        })
     };
 
     onMount(() => {
@@ -54,7 +53,7 @@
 
 </script>
 <div style="position:relative;">
-    <div style="overflow:hidden; height:240px;" id="mnths-parent">
+    <div style="overflow:auto; height:240px;" id="mnths-parent" class="no-scroll">
         <div id="mnths-child" class="user-select-none" style="cursor: pointer">
             <div class="verticaltext p-1 lh-1 fw-bold text-center" style="width:20px; height: 80px">| | <span class="fw-bolder fs-4 lh-1">↓</span></div>
             {#each mnths as m }
@@ -64,7 +63,7 @@
         </div>
         <div style="width:1px; height:160px"></div>
     </div>
-    <div style="overflow: hidden; height: 80px; position: absolute; top: 80px;" id="mnths-parent-highlight">
+    <div style="overflow: auto; height: 80px; position: absolute; top: 80px;" class="no-scroll" id="mnths-parent-highlight">
         <div id="mnths-child-highlight" class="user-select-none" style="cursor: pointer;">
             <div class="verticaltext p-1 lh-1 fw-bold text-center" style="width:20px; height: 80px">| | <span class="fw-bolder fs-4 lh-1">↓</span></div>
             {#each mnths as m }

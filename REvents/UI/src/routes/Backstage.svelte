@@ -1,10 +1,15 @@
 ﻿<script lang="ts">
     import { onMount } from 'svelte';
     import { day, date, time } from '../tools/formatting'
+    import { mobileAndTabletCheck } from '../tools/utils'
     import Monthes from '../lib/Monthes.svelte'
+    import MonthesMobile from '../lib/MonthesMobile.svelte'
 
     export let data: any = null;
     export let events: [] = null;
+
+    export const isMobile = mobileAndTabletCheck();
+    console.log(isMobile);
     onMount(async () => {
         const response = await fetch(`/api/events/backstage`);
         data = await response.json();
@@ -14,7 +19,6 @@
         const to = event.detail.to;
         const next = events.find(e => to < new Date(e.date));
         if (next) {
-
             document.getElementById(dateToId(next.date)).scrollIntoView({ behavior: "smooth", block: "start" });
         }
     };
@@ -24,7 +28,7 @@
 <h1>Backstage</h1>
 {#if data != null}
 <div class="d-flex flex-row">
-    <Monthes on:movedto="{scrollTo}" />
+
     <div class="" style="overflow-y: scroll; height: calc(100vh - 300px);">
         {#each events as p }
         <div class="">
@@ -54,4 +58,10 @@
         </div>
         {/each}
     </div>
+
+    {#if !isMobile}
+    <Monthes on:movedto="{scrollTo}" />
+    {:else}
+    <MonthesMobile on:movedto="{scrollTo}" />
+    {/if}
 </div>{/if}
