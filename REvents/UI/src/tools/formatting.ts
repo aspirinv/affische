@@ -11,7 +11,7 @@ export function time(date: Date): string {
     return new Date(date).toLocaleString(navigator.language, { hour12: false, hour: '2-digit', minute: '2-digit' });
 }
 
-export function monthes(format: "numeric" | "2-digit" | "long" | "short" | "narrow"): string {
+export function monthes(format: "numeric" | "2-digit" | "long" | "short" | "narrow"): string[] {
     return Array(12).fill(1).map((x,i)=>new Date(1900,i).toLocaleString(navigator.language, { month: format })) 
 }
 

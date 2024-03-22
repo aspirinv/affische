@@ -7,6 +7,7 @@
 
     export let data: any = null;
     export let events: [] = null;
+    export let mPos = 0;
 
     export const isMobile = mobileAndTabletCheck();
     console.log(isMobile);
@@ -22,6 +23,14 @@
             document.getElementById(dateToId(next.date)).scrollIntoView({ behavior: "smooth", block: "start" });
         }
     };
+
+    const scroll = (event) => {
+        console.log(event);
+        //c.reduce((v,e)=>e.aH = e.clientHeight + v, 0)
+        //c.find(e=>e.aH>x.scrollTop)
+        mPos++;
+    };
+
     const dateToId = (d: Date) => 'header_' + date(d);
 </script>
 
@@ -29,7 +38,7 @@
 {#if data != null}
 <div class="d-flex flex-row">
 
-    <div class="" style="overflow-y: scroll; height: calc(100vh - 300px);">
+    <div class="" style="overflow-y: scroll; height: calc(100vh - 300px);" on:scroll="{scroll}" id="parent">
         {#each events as p }
         <div class="">
             <div class="card mb-1">
@@ -60,7 +69,7 @@
     </div>
 
     {#if !isMobile}
-    <Monthes on:movedto="{scrollTo}" />
+    <Monthes on:movedto="{scrollTo}" position="{mPos}" />
     {:else}
     <MonthesMobile on:movedto="{scrollTo}" />
     {/if}
