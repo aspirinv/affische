@@ -32,6 +32,8 @@ namespace REvents
         {
             services.AddTransient<BackstageLogic>();
             services.AddTransient<BackstageClient>();
+            services.AddTransient<ShortenerLogic>();
+            services.AddTransient<IShortenerData, FirebaseShortenerData>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -67,7 +69,8 @@ namespace REvents
             app.Use(async (context, next) =>
             {
                 if (context.Request.Path.HasValue
-                    && (context.Request.Path.Value.Contains("/api")
+                    && (context.Request.Path.Value.StartsWith("/api")
+                    || context.Request.Path.Value.StartsWith("/s")
                     || context.Request.Path.Value.Split("/").Last().Contains(".")))
                 {
                     await next(context);
