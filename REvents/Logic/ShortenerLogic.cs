@@ -16,11 +16,19 @@ namespace REvents.Logic
             this.data = data;
         }
 
-        internal async Task<string> RedirectTo(string code)
+        internal async Task<string> RedirectTo(string code, VisiterData visiterData)
         {
             var link = await data.Find(code);
             if (link == null)
                 return "/";
+
+            data.RecordVisit(new ShortLinkVisit
+            {
+                VisitTime = DateTime.UtcNow,
+                FromIP = visiterData.IP,
+                UserAgent = visiterData.UserAgent,
+                LinkId = link.Id
+            });
 
             if (link.ValidTo > DateTime.Today)
                 return link.Url;
@@ -40,13 +48,17 @@ namespace REvents.Logic
 
             await data.Save(new ShortLink
             {
-                Id = Guid.NewGuid(),
                 Code = code,
                 Title = link.Title,
                 Url = link.Url,
                 ValidTo = link.ValidTo
             });
             return code;
+        }
+
+        internal async Task<ICollection<ShortLink>> List()
+        {
+            return await data.List();
         }
     }
 }

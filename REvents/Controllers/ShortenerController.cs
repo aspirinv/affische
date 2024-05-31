@@ -24,14 +24,13 @@ namespace REvents.Controllers
         [HttpGet("{code}")]
         public async Task<IActionResult> Get(string code)
         {
-            return Redirect(await logic.RedirectTo(code));
+            var ip = Request.HttpContext.Connection.RemoteIpAddress?.ToString();
+            return Redirect(await logic.RedirectTo(code, new VisiterData
+            {
+                IP = ip,
+                UserAgent = Request.Headers.UserAgent
+            }));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(ShortLinkHeader link)
-        {
-            var code = await logic.Save(link);
-            return Ok($"{Request.Scheme}://{Request.Host.Value}/s/{code}");
-        }
     }
 }

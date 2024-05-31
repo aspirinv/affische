@@ -11,7 +11,8 @@ namespace REvents.DataSource
     {
         Task Save(ShortLink link);
         Task<ShortLink> Find(string code);
-        Task RecordVisit(ShortLink link, ShortLinkVisit visit);
+        Task RecordVisit(ShortLinkVisit visit);
+        Task<ICollection<ShortLink>> List();
     }
 
     public class FirebaseShortenerData : FirebaseClient, IShortenerData
@@ -25,7 +26,7 @@ namespace REvents.DataSource
             {
                 return cache.FirstOrDefault(l => l.Code == code);
             }
-            var collection = GetCollection();
+            var collection = Links();
             var document = await collection.Where(Filter.EqualTo("code", code))
                 .OrderByDescending("validTo")
                 .Limit(1).StreamAsync().FirstOrDefaultAsync();
@@ -33,25 +34,38 @@ namespace REvents.DataSource
             return document?.ConvertTo<ShortLink>();
         }
 
-        public Task RecordVisit(ShortLink link, ShortLinkVisit visit)
+        public async Task RecordVisit(ShortLinkVisit visit)
         {
-            throw new NotImplementedException();
+            await Visits().Document().CreateAsync(visit);
         }
 
         public async Task Save(ShortLink link)
         {
-            var collection = GetCollection();
-            if (link.Id == Guid.Empty)
-                link.Id = Guid.NewGuid();
+            var collection = Links();
             await collection.AddAsync(link);
             cache = null;
             ReloadCache(collection);
         }
 
-        private CollectionReference GetCollection()
+        public async Task<ICollection<ShortLink>> List()
+        {
+            return await Links()
+                .StreamAsync()
+                .Select(e=>e.ConvertTo<ShortLink>())
+                .ToArrayAsync();
+        }
+
+        private CollectionReference Links()
         {
             var db = CreateDb();
             var collection = db.Collection("links");
+            return collection;
+        }
+        
+        private CollectionReference Visits()
+        {
+            var db = CreateDb();
+            var collection = db.Collection("visits");
             return collection;
         }
 
