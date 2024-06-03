@@ -1,5 +1,6 @@
 ﻿using REvents.DataSource;
 using REvents.DTO;
+using REvents.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace REvents.Logic
                 FromIP = visiterData.IP,
                 UserAgent = visiterData.UserAgent,
                 LinkId = link.Id
-            });
+            }).Start();
 
             if (link.ValidTo > DateTime.Today)
                 return link.Url;

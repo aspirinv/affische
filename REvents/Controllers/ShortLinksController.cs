@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using REvents.DTO;
+using REvents.Entities;
 using REvents.Logic;
 using System.Threading.Tasks;
 
@@ -7,6 +9,7 @@ namespace REvents.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ShortLinksController : ControllerBase
     {
         private readonly ShortenerLogic logic;

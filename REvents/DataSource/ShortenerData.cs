@@ -1,5 +1,8 @@
 ﻿using Google.Cloud.Firestore;
+using Microsoft.Extensions.Options;
 using REvents.DTO;
+using REvents.Entities;
+using REvents.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +22,10 @@ namespace REvents.DataSource
     {
         private static List<ShortLink> cache;
         private static object __synclock = new object();
+
+        public FirebaseShortenerData(IOptions<FirebaseOptions> options) : base(options)
+        {
+        }
 
         public async Task<ShortLink> Find(string code)
         {

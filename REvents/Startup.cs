@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -7,13 +8,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using REvents.DataSource;
 using REvents.Logic;
+using REvents.Tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace REvents
@@ -33,13 +37,33 @@ namespace REvents
             services.AddTransient<BackstageLogic>();
             services.AddTransient<BackstageClient>();
             services.AddTransient<ShortenerLogic>();
+            services.AddTransient<UserLogic>();
             services.AddTransient<IShortenerData, FirebaseShortenerData>();
+            services.AddTransient<IUserData, FirebaseUserData>();
+
+            services.Configure<FirebaseOptions>(Configuration.GetSection("FirebaseOptions"));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "REvents", Version = "v1" });
             });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(o =>
+            {
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true
+                };
+            });
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,7 +94,7 @@ namespace REvents
             {
                 if (context.Request.Path.HasValue
                     && (context.Request.Path.Value.StartsWith("/api")
-                    || context.Request.Path.Value.StartsWith("/s")
+                    || context.Request.Path.Value.StartsWith("/sl")
                     || context.Request.Path.Value.Split("/").Last().Contains(".")))
                 {
                     await next(context);
@@ -85,6 +109,7 @@ namespace REvents
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

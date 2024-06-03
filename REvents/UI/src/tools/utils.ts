@@ -7,3 +7,31 @@ export function mobileAndTabletCheck() {
     })(navigator.userAgent || navigator.vendor || window.opera);
     return check;
 };
+
+export async function post<TResponse, TBody>(input: RequestInfo | URL, body: TBody): Promise<TResponse> {
+    return await fetchData<TResponse>(input, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+    });
+}
+export async function fetchData<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
+
+    const token = localStorage.getItem("auth_token");
+    if (token) {
+        const defaultHeaders = {
+            'authorize': 'Bearer ' + token,
+            ...init?.headers
+        };
+        init = {
+            ...init,
+            headers: defaultHeaders
+        };
+    }
+    console.log(init);
+    const f = fetch(input, init);
+    await f.catch(r => {
+        console.error(r);
+    });
+    return (await f).json();
+}

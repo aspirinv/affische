@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace REvents.Controllers
 {
-    [Route("s")]
+    [Route("sl")]
     [ApiController]
     public class ShortenerController : ControllerBase
     {

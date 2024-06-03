@@ -3,6 +3,7 @@
     import Home from "./routes/Home.svelte";
     import Backstage from "./routes/Backstage.svelte";
     import Impressum from "./routes/Impressum.svelte";
+    import Login from "./routes/manage/Login.svelte";
 
     export let url = "";
     export let y = new Date().getFullYear();
@@ -27,6 +28,9 @@
         </Route>
         <Route path="/">
             <Home />
+        </Route>
+        <Route path="/auth">
+            <Login />
         </Route>
     </div>
     <footer class="bg-secondary d-flex justify-content-around p-4 mt-4">

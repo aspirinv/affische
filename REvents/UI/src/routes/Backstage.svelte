@@ -7,7 +7,7 @@
     export let events: [] = null;
     export let topDate: Date = new Date();
 
-    let parent;
+    let parent:HTMLElement|null;
     onMount(async () => {
         const response = await fetch(`/api/events/backstage`);
         data = await response.json();
@@ -32,11 +32,11 @@
 
     const dateToId = (d: Date) => 'header_' + date(d);
 
-    let _children = null;
+    let _children:HTMLElement[]|null = null;
     const getChildElements = () => {
         parent = parent || document.getElementById("parent");
         if (_children) return _children;
-        _children = Array.from(parent.childNodes);
+        _children = Array.from(parent?.childNodes??[]).map(x=>x as HTMLElement);
         _children.reduce((v, e) => {
             e.date = new Date(e.dataset.date);
             return e.aH = e.clientHeight + v;

@@ -7,7 +7,7 @@ export default defineConfig({
     server: {        
         proxy: {
             "/api": "http://localhost:43396/",
-            "/s": "http://localhost:43396/"
+            "/sl": "http://localhost:43396/"
         }
     },
     build: {
