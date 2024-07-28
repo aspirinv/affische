@@ -1,6 +1,7 @@
 ﻿using REvents.DataSource;
 using REvents.DTO;
 using REvents.Entities;
+using REvents.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace REvents.Logic
                 FromIP = visiterData.IP,
                 UserAgent = visiterData.UserAgent,
                 LinkId = link.Id
-            }).Start();
+            });
 
             if (link.ValidTo > DateTime.Today)
                 return link.Url;
@@ -39,8 +40,12 @@ namespace REvents.Logic
         private const string symbols = "abcdefghijklmnopqrstuvwxyz12345678901234567890";
         private static Random rnd = new Random();
 
-        internal async Task<string> Save(ShortLinkHeader link)
+        internal async Task<string> Save(ShortLinkHeader link, string userId)
         {
+            if (link.Url.IsEmpty())
+            {
+                throw new Exception("Url can't be empty");
+            }
             var code = "";
             do
             {
@@ -50,16 +55,27 @@ namespace REvents.Logic
             await data.Save(new ShortLink
             {
                 Code = code,
-                Title = link.Title,
+                Title = link.Title.IfEmpty(code),
                 Url = link.Url,
-                ValidTo = link.ValidTo
+                UserId = userId,
+                ValidTo = new DateTime(link.ValidTo.Ticks, DateTimeKind.Utc)
             });
             return code;
         }
 
-        internal async Task<ICollection<ShortLink>> List()
+        internal async Task<ICollection<ShortLinkInfo>> List(string userId)
         {
-            return await data.List();
+            var entities = await data.List(userId);
+            var stats = await data.GetVisitsStats(entities.Select(e => e.Id));
+            return entities.Select(e => new ShortLinkInfo
+            {
+                Id = e.Id,
+                Title = e.Title,
+                Url = e.Url,
+                ValidTo = e.ValidTo,
+                VisitsAmount = stats.FirstOrDefault(x => x.Item1 == e.Id).Item2,
+                Code = e.Code
+            }).ToArray();
         }
     }
 }

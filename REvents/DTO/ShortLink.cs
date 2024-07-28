@@ -14,4 +14,14 @@ namespace REvents.DTO
         public string UserAgent { get; set; }
     }
 
+    public class ShortLinkInfo
+    {
+        public string Id { get; set; }
+        public string Code { get; set; }
+        public string Title { get; set; }
+        public DateTime ValidTo { get; set; }
+        public string Url { get; set; }
+        public int VisitsAmount { get; set; }
+    }
+
 }

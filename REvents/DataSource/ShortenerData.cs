@@ -15,7 +15,8 @@ namespace REvents.DataSource
         Task Save(ShortLink link);
         Task<ShortLink> Find(string code);
         Task RecordVisit(ShortLinkVisit visit);
-        Task<ICollection<ShortLink>> List();
+        Task<ICollection<ShortLink>> List(string userId);
+        Task<ICollection<(string, int)>> GetVisitsStats(IEnumerable<string> linkIds);
     }
 
     public class FirebaseShortenerData : FirebaseClient, IShortenerData
@@ -54,12 +55,25 @@ namespace REvents.DataSource
             ReloadCache(collection);
         }
 
-        public async Task<ICollection<ShortLink>> List()
+        public async Task<ICollection<ShortLink>> List(string userId)
         {
             return await Links()
+                .WhereEqualTo("UserId", userId)
                 .StreamAsync()
                 .Select(e=>e.ConvertTo<ShortLink>())
                 .ToArrayAsync();
+        }
+        
+        public async Task<ICollection<(string, int)>> GetVisitsStats(IEnumerable<string> linkIds)
+        {
+            var visits = await Visits()
+                .WhereIn("LinkId", linkIds)
+                .StreamAsync()
+                .Select(e=>e.ConvertTo<ShortLinkVisit>())
+                .ToArrayAsync();
+            return visits.GroupBy(e=>e.LinkId)
+                .Select(g=>(g.Key, g.Count()))
+                .ToList();
         }
 
         private CollectionReference Links()

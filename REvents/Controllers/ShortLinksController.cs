@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using REvents.DTO;
 using REvents.Entities;
 using REvents.Logic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace REvents.Controllers
@@ -22,14 +23,14 @@ namespace REvents.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(ShortLinkHeader link)
         {
-            var code = await logic.Save(link);
-            return Ok($"{Request.Scheme}://{Request.Host.Value}/s/{code}");
+            var code = await logic.Save(link, User.FindFirstValue("Id"));
+            return Ok(new { value = $"{Request.Scheme}://{Request.Host.Value}/s/{code}" });
         }
 
         [HttpGet]
-        public async Task<ActionResult<ShortLink[]>> List()
+        public async Task<ActionResult<ShortLinkInfo[]>> List()
         {
-            return Ok(await logic.List());
+            return Ok(await logic.List(User.FindFirstValue("Id")));
         }
     }
 }

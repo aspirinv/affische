@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UI\src\routes\manage\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

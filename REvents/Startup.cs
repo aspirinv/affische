@@ -60,7 +60,9 @@ namespace REvents
                 {
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"])),
                     ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true
+                    ValidateIssuerSigningKey = true,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
                 };
             });
             services.AddAuthorization();
@@ -80,14 +82,10 @@ namespace REvents
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            //    new StaticFileOptions
-            //{
-            //    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/build"))
-            //});
 
             if (env.IsDevelopment())
             {
-                app.UseCors(b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());                
+                //app.Run()
             }
 
             app.Use(async (context, next) =>
@@ -108,6 +106,7 @@ namespace REvents
             });
 
             app.UseRouting();
+
 
             app.UseAuthentication();
             app.UseAuthorization();

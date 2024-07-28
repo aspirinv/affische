@@ -17,6 +17,8 @@ namespace REvents.Entities
         public DateTime ValidTo { get; set; }
         [FirestoreProperty]
         public string Url { get; set; }
+        [FirestoreProperty]
+        public string UserId { get; set; }
     }
 
     [FirestoreData]

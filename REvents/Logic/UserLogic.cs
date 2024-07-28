@@ -33,7 +33,7 @@ namespace REvents.Logic
                     new Claim(JwtRegisteredClaimNames.Sub, user.Login),
                     new Claim(ClaimTypes.Role,"admin")
                 ]),
-                Expires = DateTime.UtcNow.AddMinutes(5),
+                Expires = DateTime.UtcNow.AddHours(5),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature)
             };
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -1,4 +1,5 @@
-﻿
+﻿import { onApiError, type applicationError } from "./error";
+
 export function mobileAndTabletCheck() {
     let check = false;
     (function (a) {
@@ -8,19 +9,23 @@ export function mobileAndTabletCheck() {
     return check;
 };
 
-export async function post<TResponse, TBody>(input: RequestInfo | URL, body: TBody): Promise<TResponse> {
+export async function post<TResponse, TBody>(input: RequestInfo, body: TBody): Promise<TResponse | null> {
     return await fetchData<TResponse>(input, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
     });
 }
-export async function fetchData<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T> {
 
+export async function get<TResponse>(input: string): Promise<TResponse | null> {
+    return await fetchData<TResponse>(input);
+}
+
+export async function fetchData<T>(input: RequestInfo | URL, init?: RequestInit): Promise<T | null> {
     const token = localStorage.getItem("auth_token");
     if (token) {
         const defaultHeaders = {
-            'authorize': 'Bearer ' + token,
+            'authorization': 'Bearer ' + token,
             ...init?.headers
         };
         init = {
@@ -28,10 +33,18 @@ export async function fetchData<T>(input: RequestInfo | URL, init?: RequestInit)
             headers: defaultHeaders
         };
     }
-    console.log(init);
-    const f = fetch(input, init);
-    await f.catch(r => {
-        console.error(r);
-    });
-    return (await f).json();
+    const f = await fetch(input, init);
+    if (f.status === 200 || f.status === 204)
+        return f.json();
+    if (f.status === 401 || f.status === 403)
+        window.location.href = "/auth";
+
+    onApiError.dispatchEvent(new CustomEvent<applicationError>("ApiFailure", {
+        detail: {
+            code: f.status.toString(),
+            title: f.statusText,
+            message: await f.text()
+        }
+    }));
+    return null;
 }

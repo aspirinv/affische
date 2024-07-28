@@ -1,6 +1,6 @@
 <script lang="ts">
     import { post } from "../../tools/utils";
-
+    import { navigate } from "svelte-routing";
     
     let login:string = "";
     let pass:string = "";
@@ -8,7 +8,7 @@
         const token = await post<string, any>("api/auth", { 'login': login, 'password': pass});
         if(token){
             localStorage.setItem("auth_token", token.token);
-            window.location.href = "/";
+            navigate("/cp/short-links", { replace: true });
         }
     }
 </script>

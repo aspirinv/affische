@@ -6,9 +6,14 @@ export default defineConfig({
     plugins: [svelte()],
     server: {        
         proxy: {
-            "/api": "http://localhost:43396/",
+            "/api": {
+                target: "https://localhost:44398",
+                changeOrigin: true,
+                secure: false
+            },
             "/sl": "http://localhost:43396/"
-        }
+        },
+        cors: false,
     },
     build: {
         outDir: "../wwwroot"
