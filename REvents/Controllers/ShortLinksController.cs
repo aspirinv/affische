@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using REvents.DTO;
-using REvents.Entities;
 using REvents.Logic;
 using System.Security.Claims;
 using System.Threading.Tasks;

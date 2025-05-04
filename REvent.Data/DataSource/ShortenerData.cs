@@ -1,19 +1,13 @@
 ﻿using Google.Cloud.Firestore;
 using Microsoft.Extensions.Options;
-using REvents.DTO;
-using REvents.Entities;
-using REvents.Tools;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using REvents.Data.Entities;
 
-namespace REvents.DataSource
+namespace REvents.Data.DataSource
 {
     public interface IShortenerData
     {
         Task Save(ShortLink link);
-        Task<ShortLink> Find(string code);
+        Task<ShortLink?> Find(string code);
         Task RecordVisit(ShortLinkVisit visit);
         Task<ICollection<ShortLink>> List(string userId);
         Task<ICollection<(string, int)>> GetVisitsStats(IEnumerable<string> linkIds);
@@ -21,14 +15,14 @@ namespace REvents.DataSource
 
     public class FirebaseShortenerData : FirebaseClient, IShortenerData
     {
-        private static List<ShortLink> cache;
+        private static List<ShortLink>? cache;
         private static object __synclock = new object();
 
         public FirebaseShortenerData(IOptions<FirebaseOptions> options) : base(options)
         {
         }
 
-        public async Task<ShortLink> Find(string code)
+        public async Task<ShortLink?> Find(string code)
         {
             if (cache != null)
             {

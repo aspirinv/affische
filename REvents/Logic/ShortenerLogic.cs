@@ -1,7 +1,7 @@
-﻿using REvents.DataSource;
+﻿using R.Tools.Extensions;
+using REvents.Data.DataSource;
+using REvents.Data.Entities;
 using REvents.DTO;
-using REvents.Entities;
-using REvents.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,7 @@ namespace REvents.Logic
             if (link == null)
                 return "/";
 
-            data.RecordVisit(new ShortLinkVisit
+            _ = data.RecordVisit(new ShortLinkVisit
             {
                 VisitTime = DateTime.UtcNow,
                 FromIP = visiterData.IP,

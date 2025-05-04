@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace REvents.DataSource
+namespace REvents.Data.DataSource
 {
     public class BackstageClient
     {

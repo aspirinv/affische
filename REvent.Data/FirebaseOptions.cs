@@ -1,4 +1,4 @@
-﻿namespace REvents.Tools
+﻿namespace REvents.Data
 {
     public class FirebaseOptions
     {

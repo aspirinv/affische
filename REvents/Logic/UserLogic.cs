@@ -1,11 +1,11 @@
 ﻿using Microsoft.IdentityModel.Tokens;
-using REvents.DataSource;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using REvents.Data.DataSource;
 
 namespace REvents.Logic
 {

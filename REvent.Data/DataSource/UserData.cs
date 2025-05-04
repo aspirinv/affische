@@ -1,12 +1,9 @@
 ﻿using Google.Cloud.Firestore;
 using Microsoft.Extensions.Options;
-using REvents.Entities;
-using REvents.Tools;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+using R.Tools.Extensions;
+using REvents.Data.Entities;
 
-namespace REvents.DataSource
+namespace REvents.Data.DataSource
 {
     public class FirebaseUserData : FirebaseClient, IUserData
     {
@@ -14,7 +11,7 @@ namespace REvents.DataSource
         {
         }
 
-        public async Task<User> Authenticate(string login, string password)
+        public async Task<User?> Authenticate(string login, string password)
         {
             return (await Users()
                 .Where(Filter.And(Filter.EqualTo("Login", login), Filter.EqualTo("Hash", password.ToSha256())))
@@ -27,6 +24,6 @@ namespace REvents.DataSource
 
     public interface IUserData
     {
-        Task<User> Authenticate(string login, string password);
+        Task<User?> Authenticate(string login, string password);
     }
 }

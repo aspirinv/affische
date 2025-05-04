@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using REvents.DataSource;
+using REvents.Data.DataSource;
 using REvents.DTO;
 using REvents.Tools;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 

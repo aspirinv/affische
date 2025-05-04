@@ -1,6 +1,6 @@
 ﻿using Google.Cloud.Firestore;
 
-namespace REvents.Entities
+namespace REvents.Data.Entities
 {
     [FirestoreData]
 

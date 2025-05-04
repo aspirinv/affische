@@ -1,17 +1,12 @@
 ﻿using Google.Cloud.Firestore;
 using Microsoft.Extensions.Options;
-using REvents.Tools;
 
-namespace REvents.DataSource
+namespace REvents.Data.DataSource
 {
-    public class FirebaseClient
+    public class FirebaseClient(IOptions<FirebaseOptions> options)
     {
-        public FirebaseClient(IOptions<FirebaseOptions> options)
-        {
-            this.options = options.Value;
-        }
         private FirestoreDb _instance;
-        private readonly FirebaseOptions options;
+        private readonly FirebaseOptions options = options.Value;
 
         public FirestoreDb CreateDb()
         {
