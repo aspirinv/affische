@@ -9,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using REvents.Data;
 using REvents.Data.DataSource;
 using REvents.Logic;
+using REvents.Tools;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,7 @@ namespace REvents
             services.AddTransient<IUserData, FirebaseUserData>();
 
             services.Configure<FirebaseOptions>(Configuration.GetSection("FirebaseOptions"));
+            services.Configure<AppSettings>(x => Configuration.Bind(x));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

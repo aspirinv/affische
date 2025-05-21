@@ -1,4 +1,5 @@
 ﻿using Google.Cloud.Firestore;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Options;
 using REvents.Data.Entities;
 
@@ -24,16 +25,13 @@ namespace REvents.Data.DataSource
 
         public async Task<ShortLink?> Find(string code)
         {
-            if (cache != null)
-            {
-                return cache.FirstOrDefault(l => l.Code == code);
-            }
             var collection = Links();
-            var document = await collection.Where(Filter.EqualTo("code", code))
-                .OrderByDescending("validTo")
-                .Limit(1).StreamAsync().FirstOrDefaultAsync();
-            ReloadCache(collection);
-            return document?.ConvertTo<ShortLink>();
+            var document = await collection
+                .WhereEqualTo("Code", code)
+                .OrderByDescending("ValidTo")
+                .Limit(1)
+                .GetSnapshotAsync();
+            return document.FirstOrDefault()?.ConvertTo<ShortLink>();
         }
 
         public async Task RecordVisit(ShortLinkVisit visit)

@@ -1,6 +1,7 @@
 ﻿<script lang="ts">
     import { Router, Link, Route } from "svelte-routing";
     import Home from "./routes/Home.svelte";
+    import InvalidLink from "./routes/InvalidLink.svelte";
     import Backstage from "./routes/Backstage.svelte";
     import Impressum from "./routes/Impressum.svelte";
     import Login from "./routes/manage/Login.svelte";
@@ -38,6 +39,9 @@
         </Route>
         <Route path="/auth">
             <Login />
+        </Route>
+        <Route path="/invalid-link">
+            <InvalidLink />
         </Route>
         <Route path="/cp/short-links">
             <ShortLinks />
